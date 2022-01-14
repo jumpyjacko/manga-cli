@@ -24,3 +24,8 @@ should look like this:
 
 You have to know exactly what you want to read and also you get rate limited
 pretty easily, batch downloads for chapters are a feature that is coming later.
+
+Also once it's done fetching, you run:
+```sh
+feh -.n src/manga
+```
