@@ -1,0 +1,23 @@
+{
+  "name": "manga-cli",
+  "version": "1.0.0",
+  "description": "A manga reader from the comfort of your terminal.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JumpyJacko/manga-cli.git"
+  },
+  "author": "Jackson Ly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JumpyJacko/manga-cli/issues"
+  },
+  "homepage": "https://github.com/JumpyJacko/manga-cli#readme",
+  "dependencies": {
+    "mangadex-full-api": "^5.8.0",
+    "prompt-sync": "^4.2.0"
+  }
+}
