@@ -1,6 +1,6 @@
 # manga-cli
 
-A very simple MangaDex fetcher which can read manga with the help of [feh](https://wiki.archlinux.org/title/feh).
+A very simple MangaDex fetcher (soon to be full client) which can read manga with the help of [feh](https://wiki.archlinux.org/title/feh).
 
 ### Requirements
 - feh
@@ -24,8 +24,3 @@ should look like this:
 
 You have to know exactly what you want to read and also you get rate limited
 pretty easily, batch downloads for chapters are a feature that is coming later.
-
-Also once it's done fetching, you run:
-```sh
-feh -.n src/manga
-```
