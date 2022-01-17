@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "A manga reader from the comfort of your terminal.",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "test": "node ./src/index.js"
+    "test": "node --experimental-json-modules ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,9 @@
   },
   "homepage": "https://github.com/JumpyJacko/manga-cli#readme",
   "dependencies": {
+    "chalk": "^5.0.0",
+    "cli-progress": "^3.10.0",
+    "figlet": "^1.5.2",
     "mangadex-full-api": "^5.8.0",
     "prompt-sync": "^4.2.0"
   }
