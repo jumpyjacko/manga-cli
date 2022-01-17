@@ -14,7 +14,8 @@ const bar = new cliProgress.SingleBar({
 
 import chalk from 'chalk';
 
-import options from './options.json' assert { type: 'json' };
+import options from '../options.json' assert { type: 'json' };
+import { run } from '../index.js';
 
 export async function fetchMangaByTitle() {
     let manga_title = prompt(`Manga Title: `);
@@ -58,8 +59,7 @@ export async function fetchMangaByTitle() {
             
             if (read_check == 'y') {
                 exec('feh -.n src/manga');
-                console.log('Close reading window and press any key to exit...');
-                spawnSync('read _', {shell: true, stdio: [0, 1, 2]});
+                run(false);
             }
         }
 
