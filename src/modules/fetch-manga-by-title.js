@@ -1,5 +1,5 @@
 import { Manga, login } from 'mangadex-full-api';
-import { exec, spawnSync } from 'child_process';
+import { exec } from 'child_process';
 
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
@@ -15,20 +15,21 @@ const bar = new cliProgress.SingleBar({
 import chalk from 'chalk';
 
 import options from '../options.json' assert { type: 'json' };
-import { run } from '../index.js';
+import { read } from './basic-functions.js';
 
 export async function fetchMangaByTitle() {
     let manga_title = prompt(`Manga Title: `);
 
     login(options.username, options.password).then(async () => {
         let manga = await Manga.getByQuery(manga_title);
-        let chapters = await manga.getFeed({ translatedLanguage: ['en'] }, true);
+
+        // To pick a language to use, change "language" in options.json to the
+        // two(or four)-letter language code, like from this list https://www.andiamo.co.uk/resources/iso-language-codes/
+        let chapters = await manga.getFeed({ translatedLanguage: [options.language] }, true);
         
         console.log(`Fetching from ` + chalk.yellow.underline(manga.title) + `...`)
 
-        let check_chapters = prompt(`List Chapters? (y/n) `);
-
-
+        // Sorts the chapter list
         let chapter_numbers = [];
         for (let i = 0; i < Object.keys(chapters).length; i++) {
             chapter_numbers.push(chapters[i].chapter)
@@ -36,8 +37,10 @@ export async function fetchMangaByTitle() {
         let sorted = chapter_numbers.sort((a, b) => {
             return a - b;
         });
-        
-        if (check_chapters == 'y') {
+       
+        // Display the chapter list, if wanted
+        // TODO: make this display nicer, i.e. not in an array, but still a grid.
+        if (prompt(`List Chapters? (y/n) `) == 'y') {
             console.log(sorted);
         }
 
@@ -54,17 +57,10 @@ export async function fetchMangaByTitle() {
 
         let pages = await chapter.getReadablePages();
         
-        function read() {
-            let read_check = prompt('Read? (y/n) ');
-            
-            if (read_check == 'y') {
-                exec('feh -.n src/manga');
-                run(false);
-            }
-        }
-
+        // TODO: find a better way to do this,
+        // because its a function just so that these run syncronously
         function download_pages() {
-            exec('find -type f -name \'*page*\' -delete')
+            exec('find -type f -name \'*page*\' -delete') // Clears the previously downloaded manga
             bar.start(pages.length, 0);
             let k;
             let counter = 0;
@@ -75,6 +71,7 @@ export async function fetchMangaByTitle() {
                     id = id + ".";
                 }
                 
+                // Fetches the individual pages, should I use wget?
                 exec(`curl -o ./src/manga/page-${id}.png ${pages[k]}`, (error, stdout, stderr) => {
                     if (error) {
                         console.log(error);
@@ -91,9 +88,9 @@ export async function fetchMangaByTitle() {
                 });
             }
         }
-        let check = prompt(`Fetching from ` + chalk.yellow.underline(manga.title) + ` at Chapter ` + chalk.yellow.underline(chapter.chapter) + `. Is this correct? (y/n) `)
         
-        if (check == 'y') {
+        // Confirmation to check if it fetched the right manga
+        if (prompt(`Fetching from ` + chalk.yellow.underline(manga.title) + ` at Chapter ` + chalk.yellow.underline(chapter.chapter) + `. Is this correct? (y/n) `) == 'y') {
             download_pages();
         } else {
             console.log('Fetch aborted.')
