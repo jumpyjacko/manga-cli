@@ -1,9 +1,15 @@
+// Mangadex api
 import { Manga, login } from 'mangadex-full-api';
+
+// Terminal formatting imports
+import chalk from 'chalk';
 import { exec } from 'child_process';
 
+// User input imports, probably not the best module to use
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
 
+// Progress bar because I'm too lazy to make my own
 import cliProgress from 'cli-progress';
 const bar = new cliProgress.SingleBar({
     format: chalk.yellow('Fetching Pages') +  ' | [{bar}] | {percentage}% | {value}/{total} Pages',
@@ -12,14 +18,12 @@ const bar = new cliProgress.SingleBar({
     hideCursor: true
 });
 
-import chalk from 'chalk';
 
+// Internal module imports
 import options from '../options.json' assert { type: 'json' };
 import { read } from './basic-functions.js';
 
-export async function fetchMangaByTitle() {
-    let manga_title = prompt(`Manga Title: `);
-
+export async function fetchMangaByTitle(manga_title) {
     login(options.username, options.password).then(async () => {
         let manga = await Manga.getByQuery(manga_title);
 
@@ -72,18 +76,18 @@ export async function fetchMangaByTitle() {
                 }
                 
                 // Fetches the individual pages, should I use wget?
-                exec(`curl -o ./src/manga/page-${id}.png ${pages[k]}`, (error, stdout, stderr) => {
+                exec(`curl -o ./src/manga/page-${id}.png -s ${pages[k]}`, (error, stdout, stderr) => {
                     if (error) {
                         console.log(error);
                     } else if (stderr) {
+                        console.log(stderr);
+                    } else {
                         bar.increment();
                         counter++;
                         if (counter == pages.length) {
                             bar.stop();
                             read();
                         }
-                    } else {
-                        console.log(stdout);
                     }
                 });
             }
@@ -95,5 +99,5 @@ export async function fetchMangaByTitle() {
         } else {
             console.log('Fetch aborted.')
         }
-    })
+    }).catch(console.error);
 }
