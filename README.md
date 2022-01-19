@@ -9,7 +9,7 @@ node package because I have no idea what I'm doing.
 - feh
 - curl
 - a MangaDex account
-- Node.js
+- Node.js >17
 
 ### Usage
 I haven't really set anything up yet, so you just clone the repo and `cd` into
