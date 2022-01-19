@@ -2,8 +2,7 @@
 
 A very simple MangaDex fetcher (soon to be full client(if i finish it)) which can read manga with the help of [feh](https://wiki.archlinux.org/title/feh).
 
-Kind of a lot of this is built off example code from [the mangadex-full-api](https://github.com/md-y/mangadex-full-api)
-node package because I have no idea what I'm doing.
+Kind of a lot of this is built off example code from [the mangadex-full-api](https://github.com/md-y/mangadex-full-api) node package because I have no idea what I'm doing.
 
 ### Requirements
 - feh
@@ -12,12 +11,9 @@ node package because I have no idea what I'm doing.
 - Node.js >17
 
 ### Usage
-I haven't really set anything up yet, so you just clone the repo and `cd` into
-it, and then run `npm test`.
+I haven't really set anything up yet, so you just clone the repo and `cd` into it, and then run `npm install` to download the dependencies. Run `npm test` to run the program.
 
-To actually have it work, you need to make a `options.json` file in `src/`. It
-should look like this, eventually this will be automated with a first-time
-setup prompt:
+To actually have it work, you need to make a `options.json` file in `src/`. It should look like this, eventually this will be automated with a first-time setup prompt:
 
 ```json
 {
