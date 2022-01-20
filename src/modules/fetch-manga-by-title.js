@@ -18,9 +18,8 @@ const bar = new cliProgress.SingleBar({
     hideCursor: true
 });
 
-
 // Internal module imports
-import options from '../options.json' assert { type: 'json' };
+import options from '../options.json' // assert { type: 'json' }; node 17.x
 import { read } from './basic-functions.js';
 
 export async function fetchMangaByTitle(manga_title) {

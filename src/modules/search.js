@@ -10,7 +10,7 @@ const prompt = promptSync();
 
 // Internal module imports
 import { fetchMangaByTitle } from './fetch-manga-by-title.js';
-import options from '../options.json' assert { type: 'json' };
+import options from '../options.json' // assert { type: 'json' }; node 17.x
 
 let running = true;
 

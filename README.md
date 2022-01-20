@@ -8,7 +8,7 @@ Kind of a lot of this is built off example code from [the mangadex-full-api](htt
 - feh
 - curl
 - a MangaDex account
-- Node.js >17
+- Node.js
 
 ### Usage
 I haven't really set anything up yet, so you just clone the repo and `cd` into it, and then run `npm install` to download the dependencies. Run `npm test` to run the program.
