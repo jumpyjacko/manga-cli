@@ -28,8 +28,7 @@ export async function search() {
             console.log(chalk.yellow(results.length) + ` result(s): \n`);
             
             // Determines language to use for titles and descriptions
-            // if they exist, defaults to whatever the first in the arrray is
-            console.log(chalk.gray('If a localised version does not exist, it defaults to english.'))
+            console.log(chalk.gray('If a localised version does not exist, it just doesnt show up.'))
             let language = prompt('Pick a language (two or four letter code): ');
 
             let i;
@@ -54,6 +53,19 @@ export async function search() {
                 } else {
                     console.log(`\n${i}. ` + chalk.yellow(results[i].title));
                 }
+
+                // Make content rating red if erotica or pornographic
+                if (results[i].contentRating == 'erotica' || results[i].contentRating == 'pornographic' || results[i].contentRating == 'suggestive') {
+                    console.log(chalk.red(results[i].contentRating.charAt(0).toUpperCase() + results[i].contentRating.slice(1)));
+                }
+                // Get tags
+                for (let j = 0; j < results[i].tags.length; j++) {
+                    if (j+1 == results[i].tags.length) {
+                        process.stdout.write(results[i].tags[j].localizedName.localString + `\n`);
+                    } else {
+                        process.stdout.write(results[i].tags[j].localizedName.localString + ', ');
+                    }
+                }
                 
                 // Pages
                 if ((i+1) % 10 == 0) {
@@ -69,7 +81,7 @@ export async function search() {
                             console.log(chalk.yellow('read [num]') + '   - read selected manga');
                             console.log(chalk.yellow('desc [num]') + '   - read the description of the selected manga');
                             console.log(chalk.yellow('next, n') + '      - next page');
-                            console.log(chalk.yellow('quit, ^C') + '     - quits the program');
+                            console.log(chalk.yellow('quit') + '         - quits the program');
                         } else if (user_input.includes("read")) {
                             let arg = user_input.split(" ");
                             fetchMangaByTitle(results[arg[1]].title);
