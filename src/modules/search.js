@@ -67,9 +67,9 @@ export async function search() {
                     }
                 }
                 
-                // Pages
+                // Display Entries
                 if ((i+1) % 10 == 0) {
-                    console.log(`\nPage ` + chalk.yellow(page_counter) + ' of ' + chalk.yellow(Math.floor(results.length/2)));
+                    console.log(`\nPage ` + chalk.yellow(page_counter) + ' of ' + chalk.yellow(Math.roof(results.length/10)));
                     page_counter++
                     if (page_counter == results.length/10) {
                         break;
