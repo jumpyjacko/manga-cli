@@ -9,17 +9,10 @@ import promptSync from 'prompt-sync';
 const prompt = promptSync();
 
 // Internal module imports
-import { fetchMangaByTitle } from './fetch-manga-by-title.js';
+import { searchInput } from './basic-functions.js';
 import options from '../options.json' // assert { type: 'json' }; node 17.x
 
-let running = true;
-
 export async function search() {
-    // thanks https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
-    const wrap = (s) => s.replace(
-        /(?![^\n]{1,70}$)([^\n]{1,70})\s/g, '$1\n'
-    );
-
     login(options.username, options.password).then(() => {
         Manga.search({
             title: prompt("Manga Search: "),
@@ -27,12 +20,11 @@ export async function search() {
         }).then(results => {
             console.log(chalk.yellow(results.length) + ` result(s): \n`);
             
-            // Determines language to use for titles and descriptions
-            console.log(chalk.gray('If a localised version does not exist, it just doesnt show up.'))
-            let language = prompt('Pick a language (two or four letter code): ');
+            let language = options.language;
 
             let i;
             let page_counter = 1;
+            let entries_per_page = 10;
             for (i = 0; i < results.length; i++) {
                 let localizedTitle = results[i].localizedTitle;
                 let title_language;
@@ -68,36 +60,27 @@ export async function search() {
                 }
                 
                 // Display Entries
-                if ((i+1) % 10 == 0) {
-                    console.log(`\nPage ` + chalk.yellow(page_counter) + ' of ' + chalk.yellow(Math.roof(results.length/10)));
+                // i + 1 % 10 == 0; every 10 iterations
+                if ((i+1) % entries_per_page == 0) {
+                    console.log(`\nPage ` + chalk.yellow(page_counter) + ' of ' + chalk.yellow(Math.ceil(results.length/entries_per_page)));
                     page_counter++
-                    if (page_counter == results.length/10) {
-                        break;
+                    if (page_counter == results.length/entries_per_page) {
+                        continue;
                     }
-                    while (running) {
-                        let user_input = prompt(chalk.red('search (help) > '));
-                        if (user_input == 'help') {
-                            console.log(chalk.blue.underline('help') + '         - brings up this text');
-                            console.log(chalk.yellow('read [num]') + '   - read selected manga');
-                            console.log(chalk.yellow('desc [num]') + '   - read the description of the selected manga');
-                            console.log(chalk.yellow('next, n') + '      - next page');
-                            console.log(chalk.yellow('quit') + '         - quits the program');
-                        } else if (user_input.includes("read")) {
-                            let arg = user_input.split(" ");
-                            fetchMangaByTitle(results[arg[1]].title);
-                            return;
-                        } else if (user_input.includes("desc")) {
-                            let arg = user_input.split(" ");
-                            console.log(wrap(results[arg[1]].localizedDescription.localString))
-                            continue;
-                        } else if (user_input == 'next' || user_input == 'n') {
-                            break;
-                        } else if (user_input == 'quit') {
-                            process.exit();
-                        } else {
-                            console.log('Unknown command (refer to help)')
-                        }
+                    if (searchInput(results) == true) {
+                        return;
                     }
+                }
+
+                // An attempt at fixing the 'no input' bug when at last
+                // page/searched for something with fewer than 10 entries
+                // TODO: deal with this
+                if (i < results.length) {
+                    continue;
+                } else if (i == results.length) {
+                    console.log(`\nPage ` + chalk.yellow(page_counter) + ' of ' + chalk.yellow(Math.ceil(results.length/entries_per_page)));
+                    page_counter++
+                    searchInput(results);
                 }
             }
         }).catch(console.error);
