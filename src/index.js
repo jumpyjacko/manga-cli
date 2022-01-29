@@ -13,7 +13,6 @@ import { fetchMangaByTitle } from './modules/fetch-manga-by-title.js';
 import { search } from './modules/search.js';
 
 let running = true;
-export var first = true;
 
 const init = () => {
     console.log(chalk.yellow(
@@ -51,12 +50,12 @@ const input = () => {
     }
 }
 
-export const run = async () => {
-    // CLI introduction
-    init();
-    
+// CLI introduction
+init();
+ 
+export async function run() {
     // TODO: make a first time setup which generates an options.json
-
+    running = true;
     // Starts user input
     while (running) {
         input();

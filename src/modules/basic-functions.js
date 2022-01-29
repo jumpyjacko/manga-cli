@@ -4,12 +4,18 @@ import chalk from 'chalk';
 
 import { exec } from 'child_process';
 import { fetchMangaByTitle } from './fetch-manga-by-title.js';
+import { run } from '../index.js';
 
 export function read() {
-    if (prompt('Read? (y/n) ') == 'y') {
+    let input = prompt('Read? (y/n) ');
+    if (input == 'y') {
         console.log('Use arrow keys or scroll wheel to change pages.')
         exec('feh -.n src/manga');
+        run();
+    } else if (input == 'n') {
+        run();
     }
+
 }
 
 // Planned to use for searching persistently downloaded manga
@@ -25,13 +31,15 @@ export function searchInput(res) {
         } else if (user_input.includes("read")) {
             let arg = user_input.split(" ");
             fetchMangaByTitle(res[arg[1]].title);
-            return true;
+            return 'reading';
         } else if (user_input.includes("desc")) {
             let arg = user_input.split(" ");
             console.log(wrap(res[arg[1]].localizedDescription.localString.toString()));
             continue;
         } else if (user_input == 'next' || user_input == 'n') {
             break;
+        } else if (user_input == 'back') {
+            return 'home';
         } else if (user_input == 'quit') {
             process.exit();
         } else {

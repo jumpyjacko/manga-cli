@@ -10,6 +10,7 @@ const prompt = promptSync();
 
 // Internal module imports
 import { searchInput } from './basic-functions.js';
+import { run } from '../index.js';
 import options from '../options.json' // assert { type: 'json' }; node 17.x
 
 export async function search() {
@@ -67,7 +68,11 @@ export async function search() {
                     if (page_counter == results.length/entries_per_page) {
                         continue;
                     }
-                    if (searchInput(results) == true) {
+                    let input = searchInput(results);
+                    if (input == 'reading') {
+                        return;
+                    } else if (input == 'home') {
+                        run();
                         return;
                     }
                 }
