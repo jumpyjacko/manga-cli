@@ -1,4 +1,4 @@
-# manga-cli
+# manga-cli (dead for now because im working on other stuff and school)
 
 A very simple MangaDex fetcher (soon to be full client(if i finish it)) which can read manga with the help of [feh](https://wiki.archlinux.org/title/feh).
 
